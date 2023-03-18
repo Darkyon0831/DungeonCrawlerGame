@@ -1,0 +1,14 @@
+Dungeon Crawler Floor Generation
+
+Definitions
+- Floor, an set of rooms making an entire level
+- Chamber, An room in the floor
+
+* Multible difficulties of floors (easy, normal, hard)
+* Different Sizes of Chambers
+* Have enemy chambers, item chambers and special chambers
+
+Special Chambers
+- Timed Chambers (You have a time on you to clear chamber, else the player will be punished in some kind)
+- Puzzle Chambers
+- Miniboss Chambers
