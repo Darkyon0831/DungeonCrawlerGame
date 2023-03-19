@@ -1,14 +1,31 @@
 Dungeon Crawler Floor Generation
 
 Definitions
-- Floor, an set of rooms making an entire level
-- Chamber, An room in the floor
+- Floor: an set of rooms making an entire level
+- Chamber: An room in the floor
+- Floor Type: What type of floor it is
 
-* Multible difficulties of floors (easy, normal, hard)
+* Multible difficulties of floors (normal, hard)
 * Different Sizes of Chambers
-* Have enemy chambers, item chambers and special chambers
+* Have enemy chambers and special chambers
+
+Floor type
+- Based on high up the player is
+- Have enemy types for each type of floors
+- 
 
 Special Chambers
 - Timed Chambers (You have a time on you to clear chamber, else the player will be punished in some kind)
 - Puzzle Chambers
 - Miniboss Chambers
+- Item Chambers
+
+Chamber Generation
+    * Have a set of chambers saved as scenes premade
+    * Use premade chambers to generate level
+    1. Randomize floor difficuly
+    2. Generate chamber count based on randomized floor difficulty
+    3. Get the floor type spawn chamber 
+
+
+
