@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
@@ -52,11 +53,14 @@ public class Movement : MonoBehaviour
         keyboardInput.LR = lrCopy;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         UpdateInput();
+    }
 
-        transform.Translate(keyboardInput.LR * MovementSpeed, keyboardInput.UD * MovementSpeed, 0.0f);
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        transform.Translate(keyboardInput.LR * MovementSpeed * Time.deltaTime, keyboardInput.UD * MovementSpeed * Time.deltaTime, 0.0f);
     }
 }
