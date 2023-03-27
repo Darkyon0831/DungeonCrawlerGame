@@ -10,6 +10,7 @@ public class WallCollision : MonoBehaviour
     private float sizeY = 0.0f;
     private float sizeX = 0.0f;
     private BoxCollider2D boxCollider = null;
+    private Vector3 needToBeMoves = new Vector2();
 
     private void Start()
     {
@@ -26,15 +27,21 @@ public class WallCollision : MonoBehaviour
         if (hit.collider != null)
         {
             ColliderDistance2D distance2D = hit.collider.Distance(boxCollider);
-            transform.position += dir * distance2D.distance;
+            needToBeMoves += dir * distance2D.distance;
         }
     }
 
     private void Update()
     {
-
-
         LayerMask mask = LayerMask.GetMask("Wall");
+
+        needToBeMoves = Vector2.zero;
+
+        // Left and right rays
+        checkHit(transform.position + Vector3.up * sizeY, Vector3.left, sizeX);
+        checkHit(transform.position + Vector3.down * sizeY, Vector3.left, sizeX);
+        checkHit(transform.position + Vector3.up * sizeY, Vector3.right, sizeX);
+        checkHit(transform.position + Vector3.down * sizeY, Vector3.right, sizeX);
 
         // Up and down rays
         checkHit(transform.position + Vector3.left * sizeX, Vector3.up, sizeY);
@@ -42,10 +49,6 @@ public class WallCollision : MonoBehaviour
         checkHit(transform.position + Vector3.left * sizeX, Vector3.down, sizeY);
         checkHit(transform.position + Vector3.right * sizeX, Vector3.down, sizeY);
 
-        // Left and right rays
-        checkHit(transform.position + Vector3.up * sizeY, Vector3.left, sizeX);
-        checkHit(transform.position + Vector3.down * sizeY, Vector3.left, sizeX);
-        checkHit(transform.position + Vector3.up * sizeY, Vector3.right, sizeX);
-        checkHit(transform.position + Vector3.down * sizeY, Vector3.right, sizeX);
+        transform.position += needToBeMoves;
     }
 }
