@@ -13,12 +13,20 @@ public class Movement : MonoBehaviour
         
     }
 
+    int KeyToValue(string key)
+    {
+        if (Input.GetButtonDown(key)) 
+            return 1;
+        else
+            return 0;
+    }
+
     // Update is called once per frame
     void Update()
     {
         transform.Translate(
-            Input.GetAxis("KeyHorizontal") * MovementSpeed,
-            Input.GetAxis("KeyVertical") * MovementSpeed,
+            (KeyToValue("w") + -KeyToValue("s")) * MovementSpeed,
+            (KeyToValue("d") + -KeyToValue("a")) * MovementSpeed,
             0.0f
             );
     }
