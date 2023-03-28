@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class WallCollision : MonoBehaviour
 {
@@ -19,31 +18,28 @@ public class WallCollision : MonoBehaviour
         sizeX = transform.localScale.x / 2.0f;
     }
 
-    private void checkHit(Vector3 pos, Vector3 dir, float distance)
+    private void CheckCollison(Vector3 pos, Vector3 dir, float distance)
     {
-        LayerMask mask = LayerMask.GetMask("Wall");
-        RaycastHit2D hit = Physics2D.Raycast(pos, dir, distance, mask);
+        Collision2DHit hit = Collision2D.CheckHit(pos, dir, distance, "Wall", "Mirror");
 
         Debug.DrawRay(pos, dir * 10.0f);
 
-        if (hit.collider != null)
+        if (hit != null)
             transform.position += dir * (hit.distance - distance);
     }
 
     private void FixedUpdate()
     {
-        LayerMask mask = LayerMask.GetMask("Wall");
-
         // Up and down rays
-        checkHit(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.up, sizeY);
-        checkHit(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.up, sizeY);
-        checkHit(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.down, sizeY);
-        checkHit(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.down, sizeY);
+        CheckCollison(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.up, sizeY);
+        CheckCollison(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.up, sizeY);
+        CheckCollison(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.down, sizeY);
+        CheckCollison(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.down, sizeY);
 
         // Left and right rays
-        checkHit(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.left, sizeX);
-        checkHit(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.left, sizeX);
-        checkHit(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.right, sizeX);
-        checkHit(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.right, sizeX);
+        CheckCollison(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.left, sizeX);
+        CheckCollison(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.left, sizeX);
+        CheckCollison(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.right, sizeX);
+        CheckCollison(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.right, sizeX);
     }
 }
