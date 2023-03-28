@@ -21,6 +21,12 @@ public class Movement : MonoBehaviour
     [field: SerializeField]
     public KeyCode RightKey { get; set; }
 
+    [field: SerializeField]
+    public bool XInverse { get; set; } = false;
+
+    [field: SerializeField]
+    public bool YInverse { get; set; } = false;
+
     private Vector2 NormalizedVector;
 
     class KeyboardInput
@@ -39,16 +45,16 @@ public class Movement : MonoBehaviour
         float udCopy = keyboardInput.UD;
         float lrCopy = keyboardInput.LR;
 
-        if (Input.GetKeyUp(UpKey)) udCopy -= 1.0f;
-        if (Input.GetKeyUp(DownKey)) udCopy += 1.0f;
-        if (Input.GetKeyUp(LeftKey)) lrCopy += 1.0f;
-        if (Input.GetKeyUp(RightKey)) lrCopy -= 1.0f;
+        if (Input.GetKeyUp(UpKey)) udCopy -= 1.0f * (YInverse ? -1 : 1);
+        if (Input.GetKeyUp(DownKey)) udCopy += 1.0f * (YInverse ? -1 : 1);
+        if (Input.GetKeyUp(LeftKey)) lrCopy += 1.0f * (XInverse ? -1 : 1);
+        if (Input.GetKeyUp(RightKey)) lrCopy -= 1.0f * (XInverse ? -1 : 1);
 
 
-        if (Input.GetKeyDown(UpKey)) udCopy += 1.0f;
-        if (Input.GetKeyDown(DownKey)) udCopy -= 1.0f;
-        if (Input.GetKeyDown(LeftKey)) lrCopy -= 1.0f;
-        if (Input.GetKeyDown(RightKey)) lrCopy += 1.0f;
+        if (Input.GetKeyDown(UpKey)) udCopy += 1.0f * (YInverse ? -1 : 1);
+        if (Input.GetKeyDown(DownKey)) udCopy -= 1.0f * (YInverse ? -1 : 1);
+        if (Input.GetKeyDown(LeftKey)) lrCopy -= 1.0f * (XInverse ? -1 : 1);
+        if (Input.GetKeyDown(RightKey)) lrCopy += 1.0f * (XInverse ? -1 : 1);
 
         keyboardInput.UD = udCopy;
         keyboardInput.LR = lrCopy;
