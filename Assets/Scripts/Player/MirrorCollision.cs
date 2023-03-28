@@ -19,6 +19,8 @@ public class MirrorCollision : MonoBehaviour
 
     [field: SerializeField]
     public bool IsMirrorHit { get; set; }
+
+    private bool _isMirrorHit = false;
     
 
     // Start is called before the first frame update
@@ -31,32 +33,34 @@ public class MirrorCollision : MonoBehaviour
 
     private void CheckCollison(Vector3 pos, Vector3 dir, float distance)
     {
-        if (IsMirrorHit) return;
+        if (_isMirrorHit) return;
 
         Collision2DHit hit = Collision2D.CheckHit(pos, dir, distance, "Mirror");
 
         Debug.DrawRay(pos, dir * distance, Color.blue);
 
         if (hit != null)
-            IsMirrorHit = true;
+            _isMirrorHit = true;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        IsMirrorHit = false;
-
-        // Up and down rays
-        CheckCollison(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.up, sizeY + HitDistance);
-        CheckCollison(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.up, sizeY + HitDistance);
-        CheckCollison(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.down, sizeY + HitDistance);
-        CheckCollison(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.down, sizeY + HitDistance);
+        _isMirrorHit = false;
 
         // Left and right rays
         CheckCollison(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.left, sizeX + HitDistance);
         CheckCollison(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.left, sizeX + HitDistance);
         CheckCollison(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.right, sizeX + HitDistance);
         CheckCollison(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.right, sizeX + HitDistance);
+
+        if (IsMirrorHit == false && _isMirrorHit == true)
+            GameEvents.OnMirrorCollisionEnter();
+        
+        if (IsMirrorHit == true && _isMirrorHit == false)
+            GameEvents.OnMirrorCollisionLeave();
+
+       IsMirrorHit = _isMirrorHit;
 
         oldPosition = transform.position;
     }
