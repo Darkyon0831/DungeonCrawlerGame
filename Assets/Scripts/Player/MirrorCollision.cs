@@ -48,6 +48,12 @@ public class MirrorCollision : MonoBehaviour
     {
         _isMirrorHit = false;
 
+        // Up and down rays
+        CheckCollison(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.up, sizeY + HitDistance);
+        CheckCollison(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.up, sizeY + HitDistance);
+        CheckCollison(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.down, sizeY + HitDistance);
+        CheckCollison(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.down, sizeY + HitDistance);
+
         // Left and right rays
         CheckCollison(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.left, sizeX + HitDistance);
         CheckCollison(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.left, sizeX + HitDistance);
