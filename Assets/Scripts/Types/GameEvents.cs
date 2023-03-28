@@ -25,4 +25,9 @@ public class GameEvents
     public delegate void MirrorDimensionEnterAction(EnterState state);
     public static event MirrorDimensionEnterAction MirrorDimensionEnterEvent;
     public static void OnMirrorDimensionEnter(EnterState state) { MirrorDimensionEnterEvent(state); }
+
+    // Wall collision stay event
+    public delegate void WallCollisionStayAction(CollisionHit hit);
+    public static event WallCollisionStayAction WallCollisionStayEvent;
+    public static void OnWallCollisionStay(CollisionHit hit) { WallCollisionStayEvent(hit); }
 }

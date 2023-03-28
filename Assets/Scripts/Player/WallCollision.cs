@@ -16,16 +16,24 @@ public class WallCollision : MonoBehaviour
     {
         sizeY = transform.localScale.y / 2.0f;
         sizeX = transform.localScale.x / 2.0f;
+
+        GameEvents.WallCollisionStayEvent += OnWallCollisonStay;
+    }
+
+    private void OnWallCollisonStay(CollisionHit hit)
+    {
+        if (Collision.IsLayer(hit.layer, "Wall") || Collision.IsLayer(hit.layer, "Mirror"))
+            transform.position += -hit.normal * hit.distance;
     }
 
     private void CheckCollison(Vector3 pos, Vector3 dir, float distance)
     {
-        CollisionHit hit = Collision.CheckHit(pos, dir, distance, "Wall", "Mirror");
+        CollisionHit hit = Collision.CheckHit(pos, dir, distance, "Wall", "Mirror", "Moveable");
 
         Debug.DrawRay(pos, dir * 10.0f);
 
         if (hit != null)
-            transform.position += dir * (hit.distance - distance);
+            GameEvents.OnWallCollisionStay(hit);
     }
 
     private void FixedUpdate()
