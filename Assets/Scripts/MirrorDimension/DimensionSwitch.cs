@@ -30,31 +30,15 @@ public class DimensionSwitch : MonoBehaviour
 
     void OnMirrorDoor(EnterState state)
     {
-        if (state == EnterState.Mirror)
-        {
-            NormalCamera.enabled = false;
-            MirrorCamera.enabled = true;
-            Counterpart.GetComponent<FollowPlayer>().enabled = false;
-            Counterpart.GetComponent<Movement>().enabled = true;
-            Counterpart.GetComponent<WallCollision>().enabled = true;
-            Counterpart.GetComponent<MirrorCollision>().enabled = true;
-            Player.GetComponent<Movement>().enabled = false;
-            Player.GetComponent<WallCollision>().enabled = false;
-            Player.GetComponent<MirrorCollision>().enabled = false;
-            Player.GetComponent<FollowPlayer>().enabled = true;
-        }
-        else if (state == EnterState.Normal)
-        {
-            NormalCamera.enabled = true;
-            MirrorCamera.enabled = false;
-            Counterpart.GetComponent<FollowPlayer>().enabled = true;
-            Counterpart.GetComponent<Movement>().enabled = false;
-            Counterpart.GetComponent<WallCollision>().enabled = false;
-            Counterpart.GetComponent<MirrorCollision>().enabled = false;
-            Player.GetComponent<Movement>().enabled = true;
-            Player.GetComponent<WallCollision>().enabled = true;
-            Player.GetComponent<MirrorCollision>().enabled = true;
-            Player.GetComponent<FollowPlayer>().enabled = false;
-        }
+        NormalCamera.enabled = !NormalCamera.enabled;
+        MirrorCamera.enabled = !MirrorCamera.enabled;
+        Counterpart.GetComponent<FollowPlayer>().enabled = !Counterpart.GetComponent<FollowPlayer>().enabled;
+        Counterpart.GetComponent<Movement>().enabled = !Counterpart.GetComponent<Movement>().enabled;
+        Counterpart.GetComponent<WallCollision>().enabled = !Counterpart.GetComponent<WallCollision>().enabled;
+        Counterpart.GetComponent<MirrorCollision>().enabled = !Counterpart.GetComponent<MirrorCollision>().enabled;
+        Player.GetComponent<Movement>().enabled = !Player.GetComponent<Movement>().enabled;
+        Player.GetComponent<WallCollision>().enabled = !Player.GetComponent<WallCollision>().enabled;
+        Player.GetComponent<MirrorCollision>().enabled = !Player.GetComponent<MirrorCollision>().enabled;
+        Player.GetComponent<FollowPlayer>().enabled = !Player.GetComponent<FollowPlayer>().enabled;
     }
 }
