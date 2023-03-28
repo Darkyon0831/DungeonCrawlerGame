@@ -60,6 +60,12 @@ public class Movement : MonoBehaviour
         keyboardInput.LR = lrCopy;
     }
 
+    public void ResetInput()
+    {
+        keyboardInput.UD = 0;
+        keyboardInput.LR = 0;
+    }
+
     private void Start()
     {
         NormalizedVector = new Vector2(0.0f, 0.0f);
