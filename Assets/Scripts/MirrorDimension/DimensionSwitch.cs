@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.PlayerLoop.PostLateUpdate;
 
 public class DimensionSwitch : MonoBehaviour
 {
@@ -22,12 +23,6 @@ public class DimensionSwitch : MonoBehaviour
         GameEvents.MirrorDimensionEnterEvent += OnMirrorDoor;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void OnMirrorDoor(EnterState state)
     {
         NormalCamera.enabled = !NormalCamera.enabled;
@@ -36,9 +31,12 @@ public class DimensionSwitch : MonoBehaviour
         Counterpart.GetComponent<Movement>().enabled = !Counterpart.GetComponent<Movement>().enabled;
         Counterpart.GetComponent<WallCollision>().enabled = !Counterpart.GetComponent<WallCollision>().enabled;
         Counterpart.GetComponent<MirrorCollision>().enabled = !Counterpart.GetComponent<MirrorCollision>().enabled;
+        Counterpart.GetComponent<Movement>().ResetInput();
         Player.GetComponent<Movement>().enabled = !Player.GetComponent<Movement>().enabled;
         Player.GetComponent<WallCollision>().enabled = !Player.GetComponent<WallCollision>().enabled;
         Player.GetComponent<MirrorCollision>().enabled = !Player.GetComponent<MirrorCollision>().enabled;
         Player.GetComponent<FollowPlayer>().enabled = !Player.GetComponent<FollowPlayer>().enabled;
+        Player.GetComponent<Movement>().ResetInput();
+        Input.ResetInputAxes();
     }
 }
