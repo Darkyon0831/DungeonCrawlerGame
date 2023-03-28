@@ -21,6 +21,7 @@ public class Movement : MonoBehaviour
     [field: SerializeField]
     public KeyCode RightKey { get; set; }
 
+    private Vector2 NormalizedVector;
 
     class KeyboardInput
     {
@@ -53,6 +54,11 @@ public class Movement : MonoBehaviour
         keyboardInput.LR = lrCopy;
     }
 
+    private void Start()
+    {
+        NormalizedVector = new Vector2(0.0f, 0.0f);
+    }
+
     private void Update()
     {
         UpdateInput();
@@ -61,6 +67,9 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        transform.Translate(keyboardInput.LR * MovementSpeed * Time.deltaTime, keyboardInput.UD * MovementSpeed * Time.deltaTime, 0.0f);
+        NormalizedVector.Set(keyboardInput.LR, keyboardInput.UD);
+        NormalizedVector.Normalize();
+
+        transform.Translate(NormalizedVector.x * MovementSpeed * Time.deltaTime, NormalizedVector.y * MovementSpeed * Time.deltaTime, 0.0f);
     }
 }
