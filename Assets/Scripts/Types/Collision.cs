@@ -22,9 +22,7 @@ public class Collision
             mask |= LayerMask.GetMask(sMask[i]);
         }
 
-        RaycastHit hit;
-
-        Physics.Raycast(pos, dir, out hit, distance, mask);
+        Physics.Raycast(pos, dir, out RaycastHit hit, distance, mask);
 
         if (hit.collider != null)
             return new CollisionHit(hit.distance, hit.normal, hit.point);
