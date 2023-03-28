@@ -34,8 +34,8 @@ public class Movement : MonoBehaviour
         float ud = 0;
         float lr = 0;
 
-        public float UD { get { return ud; } set { if (value != ud) { Debug.Log("Input value UD changed, from " + ud + " to " + value); } ud = value; } }
-        public float LR { get { return lr; } set { if (value != lr) { Debug.Log("Input value LR changed, from " + lr + " to " + value); } lr = value; } }
+        public float UD { get { return ud; } set { ud = value; } }
+        public float LR { get { return lr; } set { lr = value; } }
     }
 
     KeyboardInput keyboardInput = new KeyboardInput();
