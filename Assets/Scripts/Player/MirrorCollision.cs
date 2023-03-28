@@ -35,7 +35,7 @@ public class MirrorCollision : MonoBehaviour
     {
         if (_isMirrorHit) return;
 
-        Collision2DHit hit = Collision2D.CheckHit(pos, dir, distance, "Mirror");
+        CollisionHit hit = Collision.CheckHit(pos, dir, distance, "Mirror");
 
         Debug.DrawRay(pos, dir * distance, Color.blue);
 

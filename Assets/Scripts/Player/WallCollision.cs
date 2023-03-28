@@ -20,7 +20,7 @@ public class WallCollision : MonoBehaviour
 
     private void CheckCollison(Vector3 pos, Vector3 dir, float distance)
     {
-        Collision2DHit hit = Collision2D.CheckHit(pos, dir, distance, "Wall", "Mirror");
+        CollisionHit hit = Collision.CheckHit(pos, dir, distance, "Wall", "Mirror");
 
         Debug.DrawRay(pos, dir * 10.0f);
 
