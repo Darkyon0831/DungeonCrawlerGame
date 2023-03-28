@@ -30,10 +30,8 @@ public class WallCollision : MonoBehaviour
             transform.position += dir * (hit.distance - distance);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-
-
         LayerMask mask = LayerMask.GetMask("Wall");
 
         // Up and down rays
