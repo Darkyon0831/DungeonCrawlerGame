@@ -10,15 +10,9 @@ public class MoveableCollision : MonoBehaviour
         GameEvents.WallCollisionStayEvent += OnWallCollisionStay;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnWallCollisionStay(CollisionHit hit)
     {
         if (Collision.IsLayer(hit.layer, "Moveable"))
-            Debug.Log("Moveable!");
+            transform.position += hit.normal * hit.distance;
     }
 }

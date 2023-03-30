@@ -30,12 +30,12 @@ public class DimensionSwitch : MonoBehaviour
         Counterpart.GetComponent<FollowPlayer>().enabled = !Counterpart.GetComponent<FollowPlayer>().enabled;
         Counterpart.GetComponent<Movement>().enabled = !Counterpart.GetComponent<Movement>().enabled;
         Counterpart.GetComponent<WallCollision>().enabled = !Counterpart.GetComponent<WallCollision>().enabled;
-        Counterpart.GetComponent<MirrorCollision>().enabled = !Counterpart.GetComponent<MirrorCollision>().enabled;
         Counterpart.GetComponent<Movement>().ResetInput();
+        Counterpart.GetComponent<Collision>().enabled = !Counterpart.GetComponent<Collision>().enabled;
         Player.GetComponent<Movement>().enabled = !Player.GetComponent<Movement>().enabled;
         Player.GetComponent<WallCollision>().enabled = !Player.GetComponent<WallCollision>().enabled;
-        Player.GetComponent<MirrorCollision>().enabled = !Player.GetComponent<MirrorCollision>().enabled;
         Player.GetComponent<FollowPlayer>().enabled = !Player.GetComponent<FollowPlayer>().enabled;
+        Player.GetComponent<Collision>().enabled = !Player.GetComponent<Collision>().enabled;
         Player.GetComponent<Movement>().ResetInput();
         Input.ResetInputAxes();
     }

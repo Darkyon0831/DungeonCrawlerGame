@@ -4,29 +4,20 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class CollisionHit
+public class Collision2DHit
 {
-    public CollisionHit(float _distance, Vector3 _normal, Vector3 _point, Vector3 _origin, string _senderTag, int _layer) { distance = _distance; normal = _normal; point = _point; origin = _origin; senderTag = _senderTag; layer = _layer; }
-    public CollisionHit(string _senderTag, int _layer) { senderTag = _senderTag; layer = _layer; }
+    public Collision2DHit(float _distance, Vector2 _normal, Vector2 _point, Vector2 _origin, string _senderTag, int _layer) { distance = _distance; normal = _normal; point = _point; origin = _origin; senderTag = _senderTag; layer = _layer; }
+    public Collision2DHit(string _senderTag, int _layer) { senderTag = _senderTag; layer = _layer; }
 
     public float distance = 0.0f;
-    public Vector3 normal = Vector3.zero;
-    public Vector3 point = Vector3.zero;
-    public Vector3 origin = Vector3.zero;
+    public Vector2 normal = Vector3.zero;
+    public Vector2 point = Vector3.zero;
+    public Vector2 origin = Vector3.zero;
     public string senderTag = "";
     public int layer = 0;
 }
 
-public class CollisionSaveData
-{
-    public CollisionSaveData(string _senderTag, int _layer) { senderTag = _senderTag; layer = _layer; }
-
-    public bool isHit = true;
-    public string senderTag = "";
-    public int layer = 0;
-}
-
-public class Collision : MonoBehaviour
+public class Collision2D : MonoBehaviour
 {
     [field: SerializeField]
     public float RayOffset { get; set; }
@@ -51,8 +42,6 @@ public class Collision : MonoBehaviour
 
     private Dictionary<string, CollisionSaveData> collisonSaveData = new Dictionary<string, CollisionSaveData>();
 
-
-
     private void Start()
     {
         sizeY = transform.localScale.y / 2.0f;
@@ -66,7 +55,7 @@ public class Collision : MonoBehaviour
 
     public void CheckHit(Vector3 pos, Vector3 dir, float distance)
     {
-        Physics.Raycast(pos, dir, out RaycastHit hit, distance, Physics.AllLayers);
+        RaycastHit2D hit = Physics2D.Raycast(pos, dir, distance, Physics.AllLayers);
 
         Debug.DrawRay(pos, dir * distance, Color.green);
 
@@ -76,11 +65,11 @@ public class Collision : MonoBehaviour
                 collisonSaveData[hit.collider.name].isHit = true;
             else
             {
-                GameEvents.OnCollisionEnter(new CollisionHit(gameObject.tag, hit.collider.gameObject.layer));
+                GameEvents.OnCollision2DEnter(new Collision2DHit(gameObject.tag, hit.collider.gameObject.layer));
                 collisonSaveData.Add(hit.collider.name, new CollisionSaveData(gameObject.tag, hit.collider.gameObject.layer));
             }
 
-            GameEvents.OnCollision(new CollisionHit(hit.distance - distance, hit.normal, hit.point, pos, gameObject.tag, hit.collider.gameObject.layer));
+            GameEvents.OnCollision2D(new Collision2DHit(hit.distance - distance, hit.normal, hit.point, pos, gameObject.tag, hit.collider.gameObject.layer));
 
         }
     }
@@ -110,7 +99,7 @@ public class Collision : MonoBehaviour
         {
             if (data.Value.isHit == false)
             {
-                GameEvents.OnCollisionLeave(new CollisionHit(data.Value.senderTag, data.Value.layer));
+                GameEvents.OnCollision2DLeave(new Collision2DHit(data.Value.senderTag, data.Value.layer));
                 collisonSaveData.Remove(data.Key);
             }
         }

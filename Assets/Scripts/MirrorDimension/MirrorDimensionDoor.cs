@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MirrorDimensionDoor : MonoBehaviour
 {
@@ -12,21 +13,22 @@ public class MirrorDimensionDoor : MonoBehaviour
 
     private EnterState enterState = EnterState.Normal;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        GameEvents.MirrorCollisionEnterEvent += OnMirrorCollisionEnter;
-        GameEvents.MirrorCollisionLeaveEvent += OnMirrorCollisionLeave;
+        GameEvents.Collision2DEnterEvent += OnCollision2DEnter;
+        GameEvents.Collision2DLeaveEvent += OnCollision2DLeave;
     }
 
-    void OnMirrorCollisionEnter()
+    private void OnCollision2DEnter(Collision2DHit hit)
     {
-        isCollision = true;
+        if (hit.senderTag == "Mirror" && Collision.IsLayer(hit.layer, "Player"))
+            isCollision = true;
     }
 
-    void OnMirrorCollisionLeave()
+    private void OnCollision2DLeave(Collision2DHit hit)
     {
-        isCollision = false;
+        if (hit.senderTag == "Mirror" && Collision.IsLayer(hit.layer, "Player"))
+            isCollision = false;
     }
 
     void Update()

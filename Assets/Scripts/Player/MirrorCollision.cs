@@ -5,69 +5,45 @@ using UnityEngine.UIElements;
 
 public class MirrorCollision : MonoBehaviour
 {
-    private Vector3 oldPosition = Vector3.zero;
-    private Vector3 dir = Vector3.zero;
+    private bool isCollision = false;
+    private bool isInput = false;
 
     [field: SerializeField]
-    public float RayOffset { get; set; }
+    public KeyCode EnterButton { get; set; }
 
-    [field: SerializeField]
-    public float HitDistance { get; set; } = 0;
+    private EnterState enterState = EnterState.Normal;
 
-    private float sizeY = 0.0f;
-    private float sizeX = 0.0f;
-
-    [field: SerializeField]
-    public bool IsMirrorHit { get; set; }
-
-    private bool _isMirrorHit = false;
-    
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        oldPosition = transform.position;
-        sizeY = transform.localScale.y / 2.0f;
-        sizeX = transform.localScale.x / 2.0f;
+        GameEvents.Collision2DEnterEvent += OnCollision2DEnter;
+        GameEvents.Collision2DLeaveEvent += OnCollision2DLeave;
     }
 
-    private void CheckCollison(Vector3 pos, Vector3 dir, float distance)
+    private void OnCollision2DEnter(Collision2DHit hit)
     {
-        if (_isMirrorHit) return;
-
-        CollisionHit hit = Collision.CheckHit(pos, dir, distance, "Mirror");
-
-        Debug.DrawRay(pos, dir * distance, Color.blue);
-
-        if (hit != null)
-            _isMirrorHit = true;
+        if (hit.senderTag == gameObject.tag && Collision.IsLayer(hit.layer, "Player"))
+            isCollision = true;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void OnCollision2DLeave(Collision2DHit hit)
     {
-        _isMirrorHit = false;
+        if (hit.senderTag == gameObject.tag && Collision.IsLayer(hit.layer, "Player"))
+            isCollision = false;
+    }
 
-        // Up and down rays
-        CheckCollison(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.up, sizeY + HitDistance);
-        CheckCollison(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.up, sizeY + HitDistance);
-        CheckCollison(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.down, sizeY + HitDistance);
-        CheckCollison(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.down, sizeY + HitDistance);
+    void Update()
+    {
+        if (Input.GetKeyDown(EnterButton)) isInput = true;
+        if (Input.GetKeyUp(EnterButton)) isInput = false;
 
-        // Left and right rays
-        CheckCollison(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.left, sizeX + HitDistance);
-        CheckCollison(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.left, sizeX + HitDistance);
-        CheckCollison(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.right, sizeX + HitDistance);
-        CheckCollison(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.right, sizeX + HitDistance);
+        if (isCollision && isInput)
+        {
+            if (enterState == EnterState.Normal) enterState = EnterState.Mirror;
+            else if (enterState == EnterState.Mirror) enterState = EnterState.Normal;
 
-        if (IsMirrorHit == false && _isMirrorHit == true)
-            GameEvents.OnMirrorCollisionEnter();
-        
-        if (IsMirrorHit == true && _isMirrorHit == false)
-            GameEvents.OnMirrorCollisionLeave();
+            GameEvents.OnMirrorDimensionEnter(enterState);
 
-       IsMirrorHit = _isMirrorHit;
-
-        oldPosition = transform.position;
+            isInput = false;
+        }
     }
 }
