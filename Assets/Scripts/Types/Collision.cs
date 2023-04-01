@@ -147,9 +147,7 @@ public class Collision : MonoBehaviour
         {
             data.Value.isHit = false;
         }
-
-        Debug.Log(raycasts.Length);
-
+        
         for (int i = 0; i < raycasts.Length; i++)
         {
             CheckHit(transform.position + raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, CheckMask);
