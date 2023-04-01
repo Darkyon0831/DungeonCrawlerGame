@@ -9,6 +9,9 @@ public class MoveableCollision : MonoBehaviour
     public bool lockPosY = false;
     public bool lockNegY = false;
 
+    public float dragWeight = 0.0f;
+    public float pushWeight = 0.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,7 +57,7 @@ public class MoveableCollision : MonoBehaviour
         if ((hit.senderTag == "Player") && Collision.IsLayer(hit.layer, "Moveable") && hit.sender.name == gameObject.name)
         {
             if (CheckIfLocked(hit.normal) == false) {
-                transform.position += hit.normal * hit.distance;
+                transform.position += (hit.normal * hit.distance) * pushWeight;
             }
             else
             {
