@@ -124,7 +124,24 @@ public class Collision : MonoBehaviour
         Physics.Raycast(pos, dir, out RaycastHit hit, distance, mask);
 
         if (hit.collider != null)
+        {
+            Debug.Log(hit.point);
             return true;
+        }
+
+        return false;
+    }
+
+    public bool IsCollisionInDir(Vector3 direction, LayerMask mask)
+    {
+        for (int i = 0; i < raycasts.Length; i++)
+        {
+            if (raycasts[i].direction == direction)
+            {
+                if (IsCheckHit(transform.position + raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, mask))
+                    return true;
+            }
+        }
 
         return false;
     }
@@ -147,7 +164,7 @@ public class Collision : MonoBehaviour
         {
             data.Value.isHit = false;
         }
-        
+
         for (int i = 0; i < raycasts.Length; i++)
         {
             CheckHit(transform.position + raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, CheckMask);

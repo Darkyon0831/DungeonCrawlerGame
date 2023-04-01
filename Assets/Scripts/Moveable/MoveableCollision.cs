@@ -58,12 +58,10 @@ public class MoveableCollision : MonoBehaviour
             }
             else
             {
-                // Check if it will need to be locked
-
                 Vector3 oldPos = transform.position;
                 transform.position += hit.normal * hit.distance;
 
-                if (GetComponent<Collision>().IsCollision(LayerMask.GetMask("Wall")) == false)
+                if (GetComponent<Collision>().IsCollisionInDir(-hit.normal, LayerMask.GetMask("Wall")) == false)
                     UnlockAxis(hit.normal);
 
                 transform.position = oldPos;
