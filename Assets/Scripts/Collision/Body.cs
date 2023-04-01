@@ -7,18 +7,16 @@ public class Body : MonoBehaviour
     public float DragWeight = 1.0f;
     public float PushWeight = 1.0f;
 
-    [field: SerializeField]
     public float DerivedDragWeight { get; private set; } = 1.0f;
 
-    [field: SerializeField]
     public float DerivedPushWeight { get; private set; } = 1.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (TryGetComponent<Collision>(out Collision col))
+        if (TryGetComponent(out Collision col))
         {
-            GameEvents.CollisionEnterEvent += OnCollisionEnter;
+            GameEvents.CollisionEnterEvent += OnCollisionOwnEnter;
             GameEvents.CollisionLeaveEvent += OnCollisionLeave;
         }
         else if (TryGetComponent<Collision2D>(out Collision2D col2D))
@@ -28,25 +26,22 @@ public class Body : MonoBehaviour
         }
     }
 
-    private void Derive(GameObject sender)
+    public void Derive(GameObject sender)
     {
-        if (sender.TryGetComponent<Body>(out Body senderBody))
+        if (sender.TryGetComponent(out Body senderBody))
         {
             DerivedDragWeight = senderBody.DragWeight;
             DerivedPushWeight = senderBody.PushWeight;
-
-            Debug.Log("Derived Drag Weight: " + DerivedDragWeight);
-            Debug.Log("Derived Push Weight: " + DerivedPushWeight);
         }
     }
 
-    private void Underive()
+    public void Underive()
     {
         DerivedDragWeight = 1.0f;
         DerivedPushWeight = 1.0f;
     }
 
-    void OnCollisionEnter(CollisionHit hit)
+    void OnCollisionOwnEnter(CollisionHit hit)
     {
         Derive(hit.sender);
     }

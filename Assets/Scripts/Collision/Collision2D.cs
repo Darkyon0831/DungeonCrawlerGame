@@ -84,7 +84,7 @@ public class Collision2D : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         // Reset all isHit
         foreach (var data in collisonSaveData)

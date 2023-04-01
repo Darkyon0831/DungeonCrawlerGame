@@ -57,7 +57,7 @@ public class MoveableCollision : MonoBehaviour
         if ((hit.senderTag == "Player") && Collision.IsLayer(hit.layer, "Moveable") && hit.sender.name == gameObject.name)
         {
             if (CheckIfLocked(hit.normal) == false) {
-                transform.position += (hit.normal * hit.distance) * pushWeight;
+                transform.position += hit.normal * hit.distance;
             }
             else
             {

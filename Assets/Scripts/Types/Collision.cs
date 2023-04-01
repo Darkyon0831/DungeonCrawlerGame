@@ -106,14 +106,14 @@ public class Collision : MonoBehaviour
             {
                 if (collisonSaveData[hit.collider.name].isHit == false)
                 {
-                    GameEvents.OnCollision(new CollisionHit(hit.distance - distance, hit.normal, hit.point, pos, gameObject.tag, hit.collider.gameObject, gameObject, hit.collider.gameObject.layer));
+                    GameEvents.OnCollision(new CollisionHit(hit.distance - distance, hit.normal * 1.01f, hit.point, pos, gameObject.tag, hit.collider.gameObject, gameObject, hit.collider.gameObject.layer));
                     collisonSaveData[hit.collider.name].isHit = true;
                 }
             }
             else
             {
                 GameEvents.OnCollisionEnter(new CollisionHit(gameObject.tag, hit.collider.gameObject.layer, hit.collider.gameObject, gameObject));
-                GameEvents.OnCollision(new CollisionHit(hit.distance - distance, hit.normal, hit.point, pos, gameObject.tag, hit.collider.gameObject, gameObject, hit.collider.gameObject.layer));
+                GameEvents.OnCollision(new CollisionHit(hit.distance - distance, hit.normal * 1.01f, hit.point, pos, gameObject.tag, hit.collider.gameObject, gameObject, hit.collider.gameObject.layer));
                 collisonSaveData.Add(hit.collider.name, new CollisionSaveData(gameObject.tag, hit.collider.gameObject, hit.collider.gameObject.layer));
             }
         }
