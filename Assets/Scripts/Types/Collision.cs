@@ -32,6 +32,15 @@ public class CollisionSaveData
 
 public class Collision : MonoBehaviour
 {
+    private class CRaycast
+    {
+        public CRaycast(Vector3 _localPos, Vector3 _direction, float _distance) { localPos = _localPos; direction = _direction; distance = _distance; }
+
+        public Vector3 localPos;
+        public Vector3 direction;
+        public float distance;
+    }
+
     [field: SerializeField]
     public float RayOffset { get; set; }
 
@@ -56,11 +65,28 @@ public class Collision : MonoBehaviour
     private float sizeY = 0.0f;
     private float sizeX = 0.0f;
     private Dictionary<string, CollisionSaveData> collisonSaveData = new Dictionary<string, CollisionSaveData>();
+    private CRaycast[] raycasts = new CRaycast[8];
 
     private void Start()
     {
         sizeY = transform.localScale.y / 2.0f;
         sizeX = transform.localScale.x / 2.0f;
+
+        // Up
+        raycasts[0] = new CRaycast(Vector3.left * (sizeX - RayOffset), Vector3.up, sizeY + UpOffset);
+        raycasts[1] = new CRaycast(Vector3.right * (sizeX - RayOffset), Vector3.up, sizeY + UpOffset);
+
+        // Down
+        raycasts[2] = new CRaycast(Vector3.left * (sizeX - RayOffset), Vector3.down, sizeY + DownOffset);
+        raycasts[3] = new CRaycast(Vector3.right * (sizeX - RayOffset), Vector3.down, sizeY + DownOffset);
+
+        // Left
+        raycasts[4] = new CRaycast(Vector3.up * (sizeY - RayOffset), Vector3.left, sizeX + LeftOffset);
+        raycasts[5] = new CRaycast(Vector3.down * (sizeY - RayOffset), Vector3.left, sizeX + LeftOffset);
+
+        // Right
+        raycasts[6] = new CRaycast(Vector3.up * (sizeY - RayOffset), Vector3.right, sizeX + RightOffset);
+        raycasts[7] = new CRaycast(Vector3.down * (sizeY - RayOffset), Vector3.right, sizeX + RightOffset);
     }
 
     public static bool IsLayer(int mask, string layer)
@@ -105,33 +131,13 @@ public class Collision : MonoBehaviour
 
     public bool IsCollision(LayerMask mask)
     {
-        bool isHit = false;
+        for (int i = 0; i < raycasts.Length; i++)
+        {
+            if (IsCheckHit(transform.position + raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, mask));
+                return true;
+        }
 
-        // Up and down rays
-        isHit = IsCheckHit(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.up, sizeY + UpOffset, mask);
-        if (isHit) return isHit;
-
-        isHit = IsCheckHit(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.up, sizeY + UpOffset, mask);
-        if (isHit) return isHit;
-
-        isHit = IsCheckHit(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.down, sizeY + DownOffset, mask);
-        if (isHit) return isHit;
-
-        isHit = IsCheckHit(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.down, sizeY + DownOffset, mask);
-        if (isHit) return isHit;
-
-        // Left and right rays
-        isHit = IsCheckHit(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.left, sizeX + LeftOffset, mask);
-        if (isHit) return isHit;
-
-        isHit = IsCheckHit(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.left, sizeX + LeftOffset, mask);
-        if (isHit) return isHit;
-
-        isHit = IsCheckHit(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.right, sizeX + RightOffset, mask);
-        if (isHit) return isHit;
-
-        isHit = IsCheckHit(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.right, sizeX + RightOffset, mask);
-        return isHit;
+        return false;
     }
 
     private void FixedUpdate()
@@ -142,17 +148,12 @@ public class Collision : MonoBehaviour
             data.Value.isHit = false;
         }
 
-        // Up and down rays
-        CheckHit(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.up, sizeY + UpOffset, CheckMask);
-        CheckHit(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.up, sizeY + UpOffset, CheckMask);
-        CheckHit(transform.position + Vector3.left * (sizeX - RayOffset), Vector3.down, sizeY + DownOffset, CheckMask);
-        CheckHit(transform.position + Vector3.right * (sizeX - RayOffset), Vector3.down, sizeY + DownOffset, CheckMask);
+        Debug.Log(raycasts.Length);
 
-        // Left and right rays
-        CheckHit(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.left, sizeX + LeftOffset, CheckMask);
-        CheckHit(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.left, sizeX + LeftOffset, CheckMask);
-        CheckHit(transform.position + Vector3.up * (sizeY - RayOffset), Vector3.right, sizeX + RightOffset, CheckMask);
-        CheckHit(transform.position + Vector3.down * (sizeY - RayOffset), Vector3.right, sizeX + RightOffset, CheckMask);
+        for (int i = 0; i < raycasts.Length; i++)
+        {
+            CheckHit(transform.position + raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, CheckMask);
+        }
 
         // Remove all collision save datas that is not a hit
         foreach (var data in collisonSaveData.ToList())
