@@ -79,7 +79,7 @@ public class Collision2D : MonoBehaviour
             {
                 GameEvents.OnCollision2DEnter(new Collision2DHit(gameObject.tag, hit.collider.gameObject.layer, hit.collider.gameObject, gameObject));
                 GameEvents.OnCollision2D(new Collision2DHit(hit.distance - distance, hit.normal, hit.point, pos, gameObject.tag, hit.collider.gameObject, gameObject, hit.collider.gameObject.layer));
-                collisonSaveData.Add(hit.collider.name, new CollisionSaveData(gameObject.tag, hit.collider.gameObject, hit.collider.gameObject.layer));
+                collisonSaveData.Add(hit.collider.name, new CollisionSaveData(gameObject.tag, hit.collider.gameObject, hit.normal, hit.collider.gameObject.layer));
             }
         }
     }

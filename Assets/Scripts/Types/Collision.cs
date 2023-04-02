@@ -8,7 +8,7 @@ using UnityEngine;
 public class CollisionHit
 {
     public CollisionHit(float _distance, Vector3 _normal, Vector3 _point, Vector3 _origin, string _senderTag, GameObject _sender, GameObject _gameObject, int _layer) { distance = _distance; normal = _normal; point = _point; origin = _origin; senderTag = _senderTag; sender = _sender; gameObject = _gameObject; layer = _layer; }
-    public CollisionHit(string _senderTag, int _layer, GameObject _sender, GameObject _gameObject) { senderTag = _senderTag; layer = _layer; sender = _sender; gameObject = _gameObject; }
+    public CollisionHit(Vector3 _normal, string _senderTag, int _layer, GameObject _sender, GameObject _gameObject) { normal = _normal; senderTag = _senderTag; layer = _layer; sender = _sender; gameObject = _gameObject; }
 
     public float distance = 0.0f;
     public Vector3 normal = Vector3.zero;
@@ -22,11 +22,12 @@ public class CollisionHit
 
 public class CollisionSaveData
 {
-    public CollisionSaveData(string _senderTag, GameObject _sender, int _layer) { senderTag = _senderTag; sender = _sender; layer = _layer; }
+    public CollisionSaveData(string _senderTag, GameObject _sender, Vector3 _normal, int _layer) { senderTag = _senderTag; sender = _sender; normal = _normal; layer = _layer; }
 
     public bool isHit = true;
     public string senderTag = "";
     public GameObject sender = null;
+    public Vector3 normal;
     public int layer = 0;
 }
 
@@ -106,15 +107,15 @@ public class Collision : MonoBehaviour
             {
                 if (collisonSaveData[hit.collider.name].isHit == false)
                 {
-                    GameEvents.OnCollision(new CollisionHit(hit.distance - distance, hit.normal * 1.01f, hit.point, pos, gameObject.tag, hit.collider.gameObject, gameObject, hit.collider.gameObject.layer));
+                    GameEvents.OnCollision(new CollisionHit(hit.distance - distance - 0.01f, hit.normal, hit.point, pos, gameObject.tag, hit.collider.gameObject, gameObject, hit.collider.gameObject.layer)); // make it so that the distance will have a offset, nor the normal vector
                     collisonSaveData[hit.collider.name].isHit = true;
                 }
             }
             else
             {
-                GameEvents.OnCollisionEnter(new CollisionHit(gameObject.tag, hit.collider.gameObject.layer, hit.collider.gameObject, gameObject));
-                GameEvents.OnCollision(new CollisionHit(hit.distance - distance, hit.normal * 1.01f, hit.point, pos, gameObject.tag, hit.collider.gameObject, gameObject, hit.collider.gameObject.layer));
-                collisonSaveData.Add(hit.collider.name, new CollisionSaveData(gameObject.tag, hit.collider.gameObject, hit.collider.gameObject.layer));
+                GameEvents.OnCollisionEnter(new CollisionHit(hit.normal, gameObject.tag, hit.collider.gameObject.layer, hit.collider.gameObject, gameObject));
+                GameEvents.OnCollision(new CollisionHit(hit.distance - distance - 0.01f, hit.normal, hit.point, pos, gameObject.tag, hit.collider.gameObject, gameObject, hit.collider.gameObject.layer)); // make it so that the distance will have a offset, nor the normal vector
+                collisonSaveData.Add(hit.collider.name, new CollisionSaveData(gameObject.tag, hit.collider.gameObject, hit.normal, hit.collider.gameObject.layer));
             }
         }
     }
@@ -175,7 +176,7 @@ public class Collision : MonoBehaviour
         {
             if (data.Value.isHit == false)
             {
-                GameEvents.OnCollisionLeave(new CollisionHit(data.Value.senderTag, data.Value.layer, data.Value.sender, gameObject));
+                GameEvents.OnCollisionLeave(new CollisionHit(data.Value.normal, data.Value.senderTag, data.Value.layer, data.Value.sender, gameObject));
                 collisonSaveData.Remove(data.Key);
             }
         }
