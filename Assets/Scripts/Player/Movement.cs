@@ -84,6 +84,6 @@ public class Movement : MonoBehaviour
         NormalizedVector.Set(keyboardInput.LR, keyboardInput.UD);
         NormalizedVector.Normalize();
 
-        transform.Translate((NormalizedVector.x * MovementSpeed * body.DerivedPushWeight) * Time.deltaTime, (NormalizedVector.y * MovementSpeed * body.DerivedPushWeight) * Time.deltaTime, 0.0f);
+        transform.Translate((NormalizedVector.x * MovementSpeed * body.DerivedDragWeight) * Time.deltaTime, (NormalizedVector.y * MovementSpeed * body.DerivedDragWeight) * Time.deltaTime, 0.0f);
     }
 }
