@@ -5,11 +5,8 @@ using UnityEngine;
 public class Body : MonoBehaviour
 {
     public float DragWeight = 1.0f;
-    public float PushWeight = 1.0f;
 
     public float DerivedDragWeight { get; private set; } = 1.0f;
-
-    public float DerivedPushWeight { get; private set; } = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -18,8 +15,9 @@ public class Body : MonoBehaviour
         {
             GameEvents.CollisionEnterEvent += OnCollisionOwnEnter;
             GameEvents.CollisionLeaveEvent += OnCollisionLeave;
+
         }
-        else if (TryGetComponent<Collision2D>(out Collision2D col2D))
+        else if (TryGetComponent(out Collision2D col2D))
         {
             GameEvents.Collision2DEnterEvent += OnCollision2DEnter;
             GameEvents.Collision2DLeaveEvent += OnCollision2DLeave;
@@ -31,14 +29,17 @@ public class Body : MonoBehaviour
         if (sender.TryGetComponent(out Body senderBody))
         {
             DerivedDragWeight = senderBody.DragWeight;
-            DerivedPushWeight = senderBody.PushWeight;
         }
+    }
+
+    public void Derive(Body body)
+    {
+        DerivedDragWeight = body.DragWeight;
     }
 
     public void Underive()
     {
         DerivedDragWeight = 1.0f;
-        DerivedPushWeight = 1.0f;
     }
 
     void OnCollisionOwnEnter(CollisionHit hit)
