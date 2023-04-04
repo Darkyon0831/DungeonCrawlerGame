@@ -2,6 +2,7 @@ using Mono.Cecil.Cil;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class Grabable : MonoBehaviour
@@ -22,15 +23,19 @@ public class Grabable : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(GrabKey) && attachedObject != null) isGrab = true;
-        else if (Input.GetKeyUp(GrabKey) && attachedObject != null) 
+        if (Input.GetKeyDown(GrabKey) && attachedObject != null)
+        {
+            isGrab = true;
+            attachedObject.GetComponent<Movement>().ResetInput();
+            attachedObject.GetComponent<Movement>().LockToNormal(grabNormal);
+        }
+        else if (Input.GetKeyUp(GrabKey) && attachedObject != null)
         {
             if (attachedObject.TryGetComponent(out Body b1))
-            {
                 b1.Underive();
-            }
 
-            isGrab = false; 
+            attachedObject.GetComponent<Movement>().UnlockInput();
+            isGrab = false;
             attachedObject = null;
             grabNormal = Vector3.zero;
         };
@@ -73,6 +78,7 @@ public class Grabable : MonoBehaviour
             if (attachedObject.TryGetComponent(out Body b1))
                 b1.Underive();
 
+            attachedObject.GetComponent<Movement>().UnlockInput();
             attachedObject = null;
             grabNormal = Vector3.zero;
         }
