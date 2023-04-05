@@ -42,6 +42,21 @@ public class Movement : MonoBehaviour
 
     KeyboardInput keyboardInput = new KeyboardInput();
 
+    void NeutralizeLocked(ref float UD, ref float LF)
+    {
+        float xInverseValue = XInverse ? -1 : 1;
+        float yInverseValue = YInverse ? -1 : 1;
+
+        if (lockedVector != Vector3.zero)
+        {
+            if (UD == 1 && lockedVector != Vector3.up) UD = 0;
+            if (UD == -1 && lockedVector != Vector3.down) UD = 0;
+
+            if (LF == -1 && lockedVector != Vector3.left) LF = 0;
+            if (LF == 1 && lockedVector != Vector3.right) LF = 0;
+        }
+    }
+
     void UpdateInput()
     {
         float udCopy = keyboardInput.UD;
@@ -50,16 +65,16 @@ public class Movement : MonoBehaviour
         float xInverseValue = XInverse ? -1 : 1;
         float yInverseValue = YInverse ? -1 : 1;
 
-        if (Input.GetKeyUp(UpKey) && (lockedVector == Vector3.up * yInverseValue || lockedVector == Vector3.zero)) udCopy -= 1.0f * yInverseValue;
-        if (Input.GetKeyUp(DownKey) && (lockedVector == Vector3.down * yInverseValue || lockedVector == Vector3.zero)) udCopy += 1.0f * yInverseValue;
-        if (Input.GetKeyUp(LeftKey) && (lockedVector == Vector3.left * xInverseValue || lockedVector == Vector3.zero)) lrCopy += 1.0f * xInverseValue;
-        if (Input.GetKeyUp(RightKey) && (lockedVector == Vector3.right * xInverseValue || lockedVector == Vector3.zero)) lrCopy -= 1.0f * xInverseValue;
+        if (Input.GetKeyUp(UpKey)) udCopy -= 1.0f * yInverseValue;
+        if (Input.GetKeyUp(DownKey)) udCopy += 1.0f * yInverseValue;
+        if (Input.GetKeyUp(LeftKey)) lrCopy += 1.0f * xInverseValue;
+        if (Input.GetKeyUp(RightKey)) lrCopy -= 1.0f * xInverseValue;
 
 
-        if (Input.GetKeyDown(UpKey) && (lockedVector == Vector3.up * yInverseValue || lockedVector == Vector3.zero)) udCopy += 1.0f * yInverseValue;
-        if (Input.GetKeyDown(DownKey) && (lockedVector == Vector3.down * yInverseValue || lockedVector == Vector3.zero)) udCopy -= 1.0f * yInverseValue;
-        if (Input.GetKeyDown(LeftKey) && (lockedVector == Vector3.left * xInverseValue || lockedVector == Vector3.zero)) lrCopy -= 1.0f * xInverseValue;
-        if (Input.GetKeyDown(RightKey) && (lockedVector == Vector3.right * xInverseValue || lockedVector == Vector3.zero)) lrCopy += 1.0f * xInverseValue;
+        if (Input.GetKeyDown(UpKey)) udCopy += 1.0f * yInverseValue;
+        if (Input.GetKeyDown(DownKey)) udCopy -= 1.0f * yInverseValue;
+        if (Input.GetKeyDown(LeftKey)) lrCopy -= 1.0f * xInverseValue;
+        if (Input.GetKeyDown(RightKey)) lrCopy += 1.0f * xInverseValue;
 
         keyboardInput.UD = udCopy;
         keyboardInput.LR = lrCopy;
@@ -96,7 +111,12 @@ public class Movement : MonoBehaviour
     {
         Body body = GetComponent<Body>();
 
-        NormalizedVector.Set(keyboardInput.LR, keyboardInput.UD);
+        float udCopy = keyboardInput.UD;
+        float lrCopy = keyboardInput.LR;
+
+        NeutralizeLocked(ref udCopy, ref lrCopy);
+
+        NormalizedVector.Set(lrCopy, udCopy);
         NormalizedVector.Normalize();
 
         transform.Translate((NormalizedVector.x * MovementSpeed * body.DerivedDragWeight) * Time.deltaTime, (NormalizedVector.y * MovementSpeed * body.DerivedDragWeight) * Time.deltaTime, 0.0f);

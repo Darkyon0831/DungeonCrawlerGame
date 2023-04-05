@@ -26,7 +26,7 @@ public class Grabable : MonoBehaviour
         if (Input.GetKeyDown(GrabKey) && attachedObject != null)
         {
             isGrab = true;
-            attachedObject.GetComponent<Movement>().ResetInput();
+            //attachedObject.GetComponent<Movement>().ResetInput();
             attachedObject.GetComponent<Movement>().LockToNormal(grabNormal);
         }
         else if (Input.GetKeyUp(GrabKey) && attachedObject != null)
