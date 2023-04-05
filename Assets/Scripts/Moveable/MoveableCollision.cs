@@ -54,7 +54,7 @@ public class MoveableCollision : MonoBehaviour
 
     private void OnCollision(CollisionHit hit)
     {
-        if ((hit.senderTag == "Player") && Collision.IsLayer(hit.layer, "Moveable") && hit.sender.name == gameObject.name)
+        if ((hit.senderTag == "Player") && Game.IsLayer(hit.layer, "Moveable") && hit.sender.name == gameObject.name)
         {
             if (CheckIfLocked(hit.normal) == false) {
                 transform.position += hit.normal * hit.distance;
@@ -71,7 +71,7 @@ public class MoveableCollision : MonoBehaviour
             }
         }
 
-        if (hit.senderTag == "Moveable" && (Collision.IsLayer(hit.layer, "Wall")) && hit.gameObject.name == gameObject.name)
+        if (hit.senderTag == "Moveable" && (Game.IsLayer(hit.layer, "Wall")) && hit.gameObject.name == gameObject.name)
         {
             transform.position += -hit.normal * hit.distance;
             LockAxis(hit.normal);

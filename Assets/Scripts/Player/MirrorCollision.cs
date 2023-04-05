@@ -21,13 +21,13 @@ public class MirrorCollision : MonoBehaviour
 
     private void OnCollision2DEnter(Collision2DHit hit)
     {
-        if (hit.senderTag == gameObject.tag && Collision.IsLayer(hit.layer, "Player"))
+        if (hit.senderTag == gameObject.tag && Game.IsLayer(hit.layer, "Player"))
             isCollision = true;
     }
 
     private void OnCollision2DLeave(Collision2DHit hit)
     {
-        if (hit.senderTag == gameObject.tag && Collision.IsLayer(hit.layer, "Player"))
+        if (hit.senderTag == gameObject.tag && Game.IsLayer(hit.layer, "Player"))
             isCollision = false;
     }
 

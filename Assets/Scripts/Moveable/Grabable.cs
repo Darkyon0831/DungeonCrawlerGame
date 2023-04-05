@@ -64,7 +64,7 @@ public class Grabable : MonoBehaviour
 
     void OnCollisionEnterOwn(CollisionHit hit)
     {
-        if (hit.gameObject.CompareTag("Player") && Collision.IsLayer(hit.layer, "Moveable") && hit.sender == gameObject)
+        if (hit.gameObject.CompareTag("Player") && Game.IsLayer(hit.layer, "Moveable") && hit.sender == gameObject)
         {
             attachedObject = hit.gameObject;
             grabNormal = hit.normal;
@@ -73,7 +73,7 @@ public class Grabable : MonoBehaviour
 
     void OnCollisionLeaveOwn(CollisionHit hit)
     {
-        if (hit.gameObject.CompareTag("Player") && Collision.IsLayer(hit.layer, "Moveable") && hit.sender == gameObject && isGrab == false)
+        if (hit.gameObject.CompareTag("Player") && Game.IsLayer(hit.layer, "Moveable") && hit.sender == gameObject && isGrab == false)
         {
             if (attachedObject.TryGetComponent(out Body b1))
                 b1.Underive();

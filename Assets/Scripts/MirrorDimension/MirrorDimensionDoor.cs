@@ -21,13 +21,16 @@ public class MirrorDimensionDoor : MonoBehaviour
 
     private void OnCollision2DEnter(Collision2DHit hit)
     {
-        if (hit.senderTag == "Mirror" && Collision.IsLayer(hit.layer, "Player"))
+        if (hit.senderTag == "Mirror" && Game.IsLayer(hit.layer, "Player"))
+        {
+            Debug.Log("Here");
             isCollision = true;
+        }
     }
 
     private void OnCollision2DLeave(Collision2DHit hit)
     {
-        if (hit.senderTag == "Mirror" && Collision.IsLayer(hit.layer, "Player"))
+        if (hit.senderTag == "Mirror" && Game.IsLayer(hit.layer, "Player"))
             isCollision = false;
     }
 

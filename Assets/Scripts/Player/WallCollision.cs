@@ -26,10 +26,10 @@ public class WallCollision : MonoBehaviour
 
     private void OnCollision(CollisionHit hit)
     {
-        if ((Collision.IsLayer(hit.layer, "Wall")) && hit.senderTag == gameObject.tag)
+        if ((Game.IsLayer(hit.layer, "Wall")) && hit.senderTag == gameObject.tag)
             transform.position += -hit.normal * hit.distance;
 
-        if (hit.senderTag == gameObject.tag && Collision.IsLayer(hit.layer, "Moveable"))
+        if (hit.senderTag == gameObject.tag && Game.IsLayer(hit.layer, "Moveable"))
         {
             if (CheckIfLocked(hit.normal, hit.sender))
             {
