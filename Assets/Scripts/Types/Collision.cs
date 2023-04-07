@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
@@ -21,31 +22,50 @@ public class Collision : BaseCollision
 
     private void Start()
     {
-        sizeY = transform.localScale.y / 2.0f;
-        sizeX = transform.localScale.x / 2.0f;
+        if (Size == Vector2.zero)
+            Size.Set(transform.localScale.x / 2.0f, transform.localScale.x / 2.0f);
+        else
+            Size /= 2;
+
+        for (int i = 0; i < raycasts.Length; i++)
+        {
+            raycasts[i] = null;
+        }
 
         // Up
-        raycasts[0] = new CRaycast(Vector3.left * (sizeX - RayOffset), Vector3.up, sizeY + UpOffset);
-        raycasts[1] = new CRaycast(Vector3.right * (sizeX - RayOffset), Vector3.up, sizeY + UpOffset);
+        if (RayDir == RayDirection.All || RayDir == RayDirection.Top)
+        {
+            raycasts[0] = new CRaycast(Vector3.left * (Size.x - RayOffset), Vector3.up, Size.y + UpOffset);
+            raycasts[1] = new CRaycast(Vector3.right * (Size.x - RayOffset), Vector3.up, Size.y + UpOffset);
+        }
 
         // Down
-        raycasts[2] = new CRaycast(Vector3.left * (sizeX - RayOffset), Vector3.down, sizeY + DownOffset);
-        raycasts[3] = new CRaycast(Vector3.right * (sizeX - RayOffset), Vector3.down, sizeY + DownOffset);
+        if (RayDir == RayDirection.All || RayDir == RayDirection.Bottom)
+        {
+            raycasts[2] = new CRaycast(Vector3.left * (Size.x - RayOffset), Vector3.down, Size.y + DownOffset);
+            raycasts[3] = new CRaycast(Vector3.right * (Size.x - RayOffset), Vector3.down, Size.y + DownOffset);
+        }
 
         // Left
-        raycasts[4] = new CRaycast(Vector3.up * (sizeY - RayOffset), Vector3.left, sizeX + LeftOffset);
-        raycasts[5] = new CRaycast(Vector3.down * (sizeY - RayOffset), Vector3.left, sizeX + LeftOffset);
+        if (RayDir == RayDirection.All || RayDir == RayDirection.Right)
+        {
+            raycasts[4] = new CRaycast(Vector3.up * (Size.y - RayOffset), Vector3.left, Size.x + LeftOffset);
+            raycasts[5] = new CRaycast(Vector3.down * (Size.y - RayOffset), Vector3.left, Size.x + LeftOffset);
+        }
 
         // Right
-        raycasts[6] = new CRaycast(Vector3.up * (sizeY - RayOffset), Vector3.right, sizeX + RightOffset);
-        raycasts[7] = new CRaycast(Vector3.down * (sizeY - RayOffset), Vector3.right, sizeX + RightOffset);
+        if (RayDir == RayDirection.All || RayDir == RayDirection.Left)
+        {
+            raycasts[6] = new CRaycast(Vector3.up * (Size.y - RayOffset), Vector3.right, Size.x + RightOffset);
+            raycasts[7] = new CRaycast(Vector3.down * (Size.y - RayOffset), Vector3.right, Size.x + RightOffset);
+        }
     }
 
     private void CheckHit(Vector3 pos, Vector3 dir, float distance, LayerMask mask)
     {
         Physics.Raycast(pos, dir, out RaycastHit hit, distance, mask);
 
-        Debug.DrawRay(pos, dir * distance, Color.green);
+        Debug.DrawRay(pos + Vector3.back * 2, dir * distance, DebugColor);
 
         if (hit.collider != null)
         {
@@ -97,7 +117,7 @@ public class Collision : BaseCollision
     {
         for (int i = 0; i < raycasts.Length; i++)
         {
-            if (IsCheckHit(transform.position + raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, mask));
+            if (IsCheckHit(transform.position + raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, mask))
                 return true;
         }
 
@@ -113,7 +133,8 @@ public class Collision : BaseCollision
 
         for (int i = 0; i < raycasts.Length; i++)
         {
-            CheckHit(transform.position + raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, CheckMask);
+            if (raycasts[i] != null)
+                CheckHit(transform.position + raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, CheckMask);
         }
 
         foreach (var data in collisonSaveData.ToList())

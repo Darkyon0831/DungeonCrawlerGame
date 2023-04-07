@@ -272,6 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8389272502e759946b69709bf74e53f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Size>k__BackingField: {x: 10, y: 10}
   <RayOffset>k__BackingField: 1
   <LeftOffset>k__BackingField: 0
   <RightOffset>k__BackingField: 0
@@ -281,6 +282,7 @@ MonoBehaviour:
   <CheckMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 264
+  <RayDir>k__BackingField: 0
 --- !u!114 &7787533499412465998
 MonoBehaviour:
   m_ObjectHideFlags: 0

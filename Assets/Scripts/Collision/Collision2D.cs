@@ -21,31 +21,33 @@ public class Collision2D : BaseCollision
 
     private void Start()
     {
-        sizeY = transform.localScale.y / 2.0f;
-        sizeX = transform.localScale.x / 2.0f;
+        if (Size == Vector2.zero)
+            Size.Set(transform.localScale.x / 2.0f, transform.localScale.x / 2.0f);
+        else
+            Size /= 2;
 
         // Up
-        raycasts[0] = new CRaycast(Vector3.left * (sizeX - RayOffset), Vector3.up, sizeY + UpOffset);
-        raycasts[1] = new CRaycast(Vector3.right * (sizeX - RayOffset), Vector3.up, sizeY + UpOffset);
+        raycasts[0] = new CRaycast(Vector3.left * (Size.x - RayOffset), Vector3.up, Size.y + UpOffset);
+        raycasts[1] = new CRaycast(Vector3.right * (Size.x - RayOffset), Vector3.up, Size.y + UpOffset);
 
         // Down
-        raycasts[2] = new CRaycast(Vector3.left * (sizeX - RayOffset), Vector3.down, sizeY + DownOffset);
-        raycasts[3] = new CRaycast(Vector3.right * (sizeX - RayOffset), Vector3.down, sizeY + DownOffset);
+        raycasts[2] = new CRaycast(Vector3.left * (Size.x - RayOffset), Vector3.down, Size.y + DownOffset);
+        raycasts[3] = new CRaycast(Vector3.right * (Size.x - RayOffset), Vector3.down, Size.y + DownOffset);
 
         // Left
-        raycasts[4] = new CRaycast(Vector3.up * (sizeY - RayOffset), Vector3.left, sizeX + LeftOffset);
-        raycasts[5] = new CRaycast(Vector3.down * (sizeY - RayOffset), Vector3.left, sizeX + LeftOffset);
+        raycasts[4] = new CRaycast(Vector3.up * (Size.y - RayOffset), Vector3.left, Size.x + LeftOffset);
+        raycasts[5] = new CRaycast(Vector3.down * (Size.y - RayOffset), Vector3.left, Size.x + LeftOffset);
 
         // Right
-        raycasts[6] = new CRaycast(Vector3.up * (sizeY - RayOffset), Vector3.right, sizeX + RightOffset);
-        raycasts[7] = new CRaycast(Vector3.down * (sizeY - RayOffset), Vector3.right, sizeX + RightOffset);
+        raycasts[6] = new CRaycast(Vector3.up * (Size.y - RayOffset), Vector3.right, Size.x + RightOffset);
+        raycasts[7] = new CRaycast(Vector3.down * (Size.y - RayOffset), Vector3.right, Size.x + RightOffset);
     }
 
     private void CheckHit(Vector2 pos, Vector2 dir, float distance, LayerMask mask)
     {
         RaycastHit2D hit = Physics2D.Raycast(pos, dir, distance, mask);
 
-        Debug.DrawRay(pos, dir * distance, Color.green);
+        Debug.DrawRay(((Vector3)pos) + Vector3.back * 2, dir * distance, DebugColor);
 
         if (hit.collider != null)
         {
@@ -97,8 +99,8 @@ public class Collision2D : BaseCollision
     {
         for (int i = 0; i < raycasts.Length; i++)
         {
-            if (IsCheckHit(transform.position + (Vector3)raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, mask)) ;
-            return true;
+            if (IsCheckHit(transform.position + (Vector3)raycasts[i].localPos, raycasts[i].direction, raycasts[i].distance, mask))
+                return true;
         }
 
         return false;

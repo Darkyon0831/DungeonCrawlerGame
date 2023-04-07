@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class Unlocker : MonoBehaviour
 {
-    private bool isSolved = false;
+    protected bool isSolved = false;
     public bool IsSolved { get { return isSolved; } }
 }

@@ -49,7 +49,8 @@ public class Body : MonoBehaviour
 
     void OnCollisionLeave(CollisionHit hit)
     {
-        Underive();
+        if (hit.gameObject.TryGetComponent(out Body _))
+            Underive();
     }
 
     void OnCollision2DEnter(Collision2DHit hit)
